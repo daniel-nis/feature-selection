@@ -1,3 +1,24 @@
+def feature_search(data):
+    features = []
+
+    for i in range(len(data)):
+        print("On the " + str(i) + "th level of the search tree")
+        feature_to_add = []
+        best_accuracy = 0
+
+        for j in range(len(data)):
+            if data[j] not in features:
+                print("--Considering adding the " + str(j) + "feature")
+                accuracy = leave_one_out_cross_validation(data, features, j+1)
+
+                if accuracy > best_accuracy:
+                    best_accuracy = accuracy
+                    feature_to_add = j
+        
+        features[i] = feature_to_add
+        print("On level " + str(i) + "i added feature " + str(feature_to_add) +  "to current set")
+
+
 """
 function feature_search_demo(data)
 
