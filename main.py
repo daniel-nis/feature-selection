@@ -1,22 +1,22 @@
 def feature_search(data):
-    features = []
+    current_set_of_features = []
 
     for i in range(len(data)):
         print("On the " + str(i) + "th level of the search tree")
-        feature_to_add = []
-        best_accuracy = 0
+        feature_to_add_at_this_level = []
+        best_so_far_accuracy = 0
 
         for j in range(len(data)):
-            if data[j] not in features:
+            if data[j] not in current_set_of_features:
                 print("--Considering adding the " + str(j) + "feature")
-                accuracy = leave_one_out_cross_validation(data, features, j+1)
+                accuracy = leave_one_out_cross_validation(data, current_set_of_features, j+1)
 
-                if accuracy > best_accuracy:
-                    best_accuracy = accuracy
-                    feature_to_add = j
+                if accuracy > best_so_far_accuracy:
+                    best_so_far_accuracy = accuracy
+                    feature_to_add_at_this_level = j
         
-        features[i] = feature_to_add
-        print("On level " + str(i) + "i added feature " + str(feature_to_add) +  "to current set")
+        current_set_of_features[i] = feature_to_add_at_this_level
+        print("On level " + str(i) + "I added feature " + str(feature_to_add_at_this_level) +  "to current set")
 
 
 """
@@ -47,6 +47,28 @@ for i = 1 : size(data,2) - 1
 end
 """
 
+def leave_one_out_cross_validation(data, current_set, feature_to_add):
+    number_correctly_classfied = 0
+
+    for i in range(len(data)):
+        object_to_classify = data[i]
+        label_object_to_classify = data[i]
+
+        #nearest_neighbor_distance = inf
+        #nearest_neighbor_location = inf
+
+        for j in range(len(data)):
+            if j != i:
+                #distance = sqrt(sum((object_to_classify - data(k,2:end)).^2))
+                if distance < nearest_neighbor_distance:
+                    nearest_neighbor_distance = distance
+                    nearest_neighbor_location = j
+                    nearest_neighbor_label = data(nearest_neighbor_location, 1)
+
+        if label_object_to_classify == nearest_neighbor_label:
+            number_correctly_classfied = number_correctly_classfied + 1
+
+    accuracy = number_correctly_classfied / size(len(data))
 
 """
 function accuracy = leave_one_out_cross_validation(data,current_set,feature_to_add)
