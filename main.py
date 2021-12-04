@@ -1,3 +1,15 @@
+import random
+
+"""def read_file():
+    #file = open("Ver_2_CS170_Fall_2021_LARGE_data__24.txt", "r")
+    file = open("Ver_2_CS170_Fall_2021_Small_data__41.txt", "r")
+    print(file)"""
+
+data = [1,2,3,4,5,6,7,8,9,10]
+
+def leave_one_out_cross_validation(data, current_set_of_features, feature_to_add):
+    return random.randint(1,10)
+
 def feature_search(data):
     current_set_of_features = []
 
@@ -8,16 +20,17 @@ def feature_search(data):
 
         for j in range(len(data)):
             if data[j] not in current_set_of_features:
-                print("--Considering adding the " + str(j) + "feature")
+                print("--Considering adding the " + str(j) + " feature")
                 accuracy = leave_one_out_cross_validation(data, current_set_of_features, j+1)
 
                 if accuracy > best_so_far_accuracy:
                     best_so_far_accuracy = accuracy
                     feature_to_add_at_this_level = j
         
-        current_set_of_features[i] = feature_to_add_at_this_level
-        print("On level " + str(i) + "I added feature " + str(feature_to_add_at_this_level) +  "to current set")
+        current_set_of_features.append(feature_to_add_at_this_level)
+        print("On level " + str(i) + " I added feature " + str(feature_to_add_at_this_level) +  " to current set\n")
 
+feature_search(data)
 
 """
 function feature_search_demo(data)
@@ -47,7 +60,7 @@ for i = 1 : size(data,2) - 1
 end
 """
 
-def leave_one_out_cross_validation(data, current_set, feature_to_add):
+"""def leave_one_out_cross_validation(data, current_set, feature_to_add):
     number_correctly_classfied = 0
 
     for i in range(len(data)):
@@ -70,7 +83,7 @@ def leave_one_out_cross_validation(data, current_set, feature_to_add):
 
     accuracy = number_correctly_classfied / size(len(data))
 
-"""
+""""""
 function accuracy = leave_one_out_cross_validation(data,current_set,feature_to_add)
 
 number_correctly_classfied = 0;
@@ -100,3 +113,5 @@ end
 accuracy = number_correctly_classfied / size(data,1);
 end
 """
+
+#read_file()
