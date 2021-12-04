@@ -1,11 +1,21 @@
 import random
 
-"""def read_file():
+def read_file():
     #file = open("Ver_2_CS170_Fall_2021_LARGE_data__24.txt", "r")
     file = open("Ver_2_CS170_Fall_2021_Small_data__41.txt", "r")
-    print(file)"""
+    data = []
+    for line in file.readlines():
+        data.append([float(i) for i in line.split()])
 
-data = [1,2,3,4,5,6,7,8,9,10]
+    print(data[1][1])
+    print(data[1][2])
+    print(data[1][3])
+    print(data[1][4])
+    return data
+
+read_file()
+
+#data = [1,2,3,4,5,6,7,8,9,10]
 
 def leave_one_out_cross_validation(data, current_set_of_features, feature_to_add):
     return random.randint(1,10)
@@ -13,14 +23,14 @@ def leave_one_out_cross_validation(data, current_set_of_features, feature_to_add
 def feature_search(data):
     current_set_of_features = []
 
-    for i in range(len(data)):
-        print("On the " + str(i) + "th level of the search tree")
+    for i in range(len(data)):           # dont count first column
+        print("On the " + str(i+1) + "th level of the search tree")
         feature_to_add_at_this_level = []
         best_so_far_accuracy = 0
 
         for j in range(len(data)):
             if data[j] not in current_set_of_features:
-                print("--Considering adding the " + str(j) + " feature")
+                print("--Considering adding the " + str(j+1) + " feature")
                 accuracy = leave_one_out_cross_validation(data, current_set_of_features, j+1)
 
                 if accuracy > best_so_far_accuracy:
@@ -28,9 +38,9 @@ def feature_search(data):
                     feature_to_add_at_this_level = j
         
         current_set_of_features.append(feature_to_add_at_this_level)
-        print("On level " + str(i) + " I added feature " + str(feature_to_add_at_this_level) +  " to current set\n")
+        print("On level " + str(i+1) + " I added feature " + str(feature_to_add_at_this_level) +  " to current set\n")
 
-feature_search(data)
+#feature_search(data)
 
 """
 function feature_search_demo(data)
