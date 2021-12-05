@@ -32,7 +32,7 @@ def read_file():
         for j in range(1, features_in_data):
             if j not in current_set_of_features:
                 print("--Considering adding the " + str(j) + " feature")
-                accuracy = leave_one_out_cross_validation(data, current_set_of_features, j+1)
+                accuracy = leave_one_out_cross_validation(data, current_set_of_features, j)
 
                 if accuracy > best_so_far_accuracy:
                     best_so_far_accuracy = accuracy
@@ -49,7 +49,16 @@ def leave_one_out_cross_validation(current_set, feature_to_add):
     feature_list = copy.deepcopy(current_set)
     feature_list.append(feature_to_add)
 
-    number_correctly_classfied = 0
+    temp_data = copy.deepcopy(data)
+    for i in range(len(feature_list)):
+        print(temp_data[i][4])
+
+    for a in range(len(temp_data)):
+        if a not in feature_list:
+            temp_data[a] = 0
+        #print(temp_data[a])
+
+    """number_correctly_classfied = 0
 
     for i in range(len(data)):
         object_to_classify = data[i]
@@ -76,9 +85,9 @@ def leave_one_out_cross_validation(current_set, feature_to_add):
             number_correctly_classfied = number_correctly_classfied + 1
 
     accuracy = number_correctly_classfied / len(data)
-    print(accuracy)
+    print(accuracy)"""
 
-leave_one_out_cross_validation([1,2,3], 4)
+leave_one_out_cross_validation([3, 8], 2)
 
 """
 function accuracy = leave_one_out_cross_validation(data,current_set,feature_to_add)
