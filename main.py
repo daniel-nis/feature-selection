@@ -72,8 +72,13 @@ def feature_search(selection):
     #elif selection == 2:    # backward elimination
     if selection == "2":
         
-        current_set_of_features = copy.deepcopy(data[0])
-        print(current_set_of_features)
+        #current_set_of_features = copy.deepcopy(data[0])
+        #print(current_set_of_features)
+
+        for i in range(features_in_data):
+            current_set_of_features.append(i)
+
+        #print(current_set_of_features)
 
         for i in range(1, features_in_data):           # dont count first column
             print("On level " + str(i) + " of the search tree")
