@@ -26,8 +26,8 @@ def read_file():
 
     return data
 
-def leave_one_out_cross_validation(data, current_set_of_features, feature_to_add):
-    return random.randint(1,10)
+#def leave_one_out_cross_validation(data, current_set_of_features, feature_to_add):
+ #   return random.randint(1,10)
 
 # feature search algorithm - contains forward selection (as provided by professor) and backward eliminination
 def feature_search(selection):
@@ -88,13 +88,19 @@ def feature_search(selection):
 
 
             for j in range(1, features_in_data):
-                if j not in features_removed:
+                if j in current_set_of_features:
                     print("--Considering removing the " + str(j) + " feature")
                     accuracy = leave_one_out_cross_validation(data, current_set_of_features, j)
 
                     if accuracy > best_so_far_accuracy:
                         best_so_far_accuracy = accuracy
                         feature_to_remove_at_this_level = j
+                """print("--Considering removing the " + str(j) + " feature")
+                accuracy = leave_one_out_cross_validation(data, current_set_of_features, j)
+
+                if accuracy > best_so_far_accuracy:
+                    best_so_far_accuracy = accuracy
+                    feature_to_remove_at_this_level = j"""
         
             current_set_of_features.remove(feature_to_remove_at_this_level)
             features_removed.append(feature_to_remove_at_this_level)
@@ -160,6 +166,46 @@ def feature_search(selection):
     print(accuracy)
     return accuracy"""
 
+def leave_one_out_cross_validation(data, current_set, feature_to_remove):
+#def leave_one_out_cross_validation(current_set, feature_to_remove):
+    #data = read_file()
+
+    feature_list = copy.deepcopy(current_set)
+    feature_list.remove(feature_to_remove)
+
+    number_correctly_classfied = 0
+
+    for i in range(len(data)):
+        object_to_classify = data[i]
+        label_object_to_classify = data[i][0]       # labels from first column
+
+        nearest_neighbor_distance = math.inf
+        nearest_neighbor_location = math.inf
+
+        for j in range(len(data)):
+            if j != i:
+                lp = copy.deepcopy(data[j])
+                this_distance = 0
+                for a in range(len(feature_list)):
+                    feats = feature_list[a]
+                    this_distance += math.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
+                    #this_distance += np.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
+
+                if this_distance < nearest_neighbor_distance:
+                    nearest_neighbor_distance = this_distance
+                    nearest_neighbor_location = j
+                    nearest_neighbor_label = data[nearest_neighbor_location][0]
+
+        #print("Object " + str(i) + " is class " + str(label_object_to_classify))
+        #print("Its nearest neighbor is " + str(nearest_neighbor_location) + " which is class " + str(nearest_neighbor_label))
+
+        if label_object_to_classify == nearest_neighbor_label:
+            number_correctly_classfied = number_correctly_classfied + 1
+
+    accuracy = number_correctly_classfied / len(data)
+    print(accuracy)
+    return accuracy
+
 
 def main():
     start_time = time.time()
@@ -174,5 +220,6 @@ def main():
 main()
 
 #leave_one_out_cross_validation([7, 4], 9)  # AT small
-#leave_one_out_cross_validation([3, 8], 2)   # EA small
+#leave_one_out_cross_validation([3, 2, 8], 8)   # EA small
 #leave_one_out_cross_validation([26, 27], 31)   EA large
+#leave_one_out_cross_validation([1, 4, 6], 6)   # EA small
