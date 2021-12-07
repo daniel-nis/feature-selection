@@ -5,9 +5,11 @@ import math
 import copy
 import time
 
+
+# reads in the file and returns the data within it
 def read_file():
     #file = open("Ver_2_CS170_Fall_2021_LARGE_data__24.txt", "r")
-    #file = open("Ver_2_CS170_Fall_2021_Small_data__41.txt", "r")
+    file = open("Ver_2_CS170_Fall_2021_Small_data__41.txt", "r")
     #file = open("Ver_2_CS170_Fall_2021_Small_data__86.txt", "r")     # EA dataset small
     #file = open("Ver_2_CS170_Fall_2021_LARGE_data__27.txt", "r")     # EA dataset large
     #file = open("Ver_2_CS170_Fall_2021_Small_data__61.txt", "r")     # AT dataset small
@@ -21,6 +23,7 @@ def read_file():
 """def leave_one_out_cross_validation(data, current_set_of_features, feature_to_add):
     return random.randint(1,10)"""
 
+# forward search algorithm, as provided by professor
 def feature_search():
     data = read_file()
     features_in_data = len(data[0])
@@ -48,12 +51,14 @@ def feature_search():
         current_set_of_features.append(feature_to_add_at_this_level)
         print("On level " + str(i) + " I added feature " + str(feature_to_add_at_this_level) +  " to current set\n")
 
+        # find the subset that had the best accuracy
         if top_accuracy < best_so_far_accuracy:
             top_accuracy = best_so_far_accuracy
             best_subset = copy.deepcopy(current_set_of_features)
         else:
             decreasing_accuracy_count += 1
-
+        # algorithm takes too long to run, so I made a greedy choice, 
+        # as the accuracy ends up always dropping off for every extra feature after 2-3 features
         if decreasing_accuracy_count > 4:
             break
 
@@ -64,6 +69,7 @@ def feature_search():
     #    print(str(best_subset[k]))
     #print("Which returns an accuracy of: " + top_accuracy)
 
+#leave one out cross validation function, as provided by professor
 def leave_one_out_cross_validation(data, current_set, feature_to_add):
 #def leave_one_out_cross_validation(current_set, feature_to_add):
     data = read_file()
@@ -87,6 +93,7 @@ def leave_one_out_cross_validation(data, current_set, feature_to_add):
                 for a in range(len(feature_list)):
                     feats = feature_list[a]
                     this_distance += math.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
+                    #this_distance += np.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
 
                 if this_distance < nearest_neighbor_distance:
                     nearest_neighbor_distance = this_distance
