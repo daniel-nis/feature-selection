@@ -75,8 +75,9 @@ def feature_search(selection):
         #current_set_of_features = copy.deepcopy(data[0])
         #print(current_set_of_features)
 
-        for i in range(features_in_data):
+        for i in range(1, features_in_data):        # dont count first column
             current_set_of_features.append(i)
+        print(current_set_of_features)
 
         #print(current_set_of_features)
 
