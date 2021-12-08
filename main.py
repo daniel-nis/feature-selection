@@ -1,15 +1,15 @@
-import random
 import math
-#import numpy as np
-#from scipy.spatial import distance
 import copy
 import time
+import multiprocessing as mp
 
+# asks user to select a search algorithm
 def search_selection():
     print("Enter the number associated with an algorithm to select it:\n"
                 + "1. Forward Selection\n"
-                + "2. Backward Elimination\n")
+                + "2. Backward Elimination")
     selection = input("Enter number: ")
+    print()
     return selection
 
 # reads in the file and returns the data within it
@@ -26,10 +26,9 @@ def read_file():
 
     return data
 
-#def leave_one_out_cross_validation(data, current_set_of_features, feature_to_add):
- #   return random.randint(1,10)
-
 # feature search algorithm - contains forward selection (as provided by professor) and backward eliminination
+# forward selection starts with an empty feature list and adds the feature that yields the greatest accuracy at each level
+# backward elimination starts with every feature and removes the one that allows the list to have a higher accuracy at each level
 def feature_search(selection):
     data = read_file()
     features_in_data = len(data[0])
@@ -40,7 +39,7 @@ def feature_search(selection):
     top_accuracy = 0
     decreasing_accuracy_count = 0
 
-    """if selection == "1":      # forward selection
+    if selection == "1":      # forward selection
         for i in range(1, features_in_data):           # dont count first column
             print("On level " + str(i) + " of the search tree")
             feature_to_add_at_this_level = []
@@ -49,7 +48,7 @@ def feature_search(selection):
             for j in range(1, features_in_data):
                 if j not in current_set_of_features:
                     print("--Considering adding the " + str(j) + " feature")
-                    accuracy = leave_one_out_cross_validation(data, current_set_of_features, j)
+                    accuracy = leave_one_out_cross_validation(data, current_set_of_features, j, selection)
 
                     if accuracy > best_so_far_accuracy:
                         best_so_far_accuracy = accuracy
@@ -58,28 +57,27 @@ def feature_search(selection):
             current_set_of_features.append(feature_to_add_at_this_level)
             print("On level " + str(i) + " I added feature " + str(feature_to_add_at_this_level) +  " to current set\n")
 
+            print("The current set is: ")
+            print(current_set_of_features)
+            print("and has accuracy " + str(best_so_far_accuracy) + "\n")
+            
             # find the subset that had the best accuracy
             if top_accuracy < best_so_far_accuracy:
                 top_accuracy = best_so_far_accuracy
                 best_subset = copy.deepcopy(current_set_of_features)
             else:
                 decreasing_accuracy_count += 1
+            
             # algorithm takes too long to run, so I made a greedy choice, 
             # as the accuracy ends up always dropping off for every extra feature after 2-3 features
-            if decreasing_accuracy_count > 4:
-                break"""
+            if features_in_data > 15:
+                if decreasing_accuracy_count > 4:
+                    break
 
     #elif selection == 2:    # backward elimination
     if selection == "2":
-        
-        #current_set_of_features = copy.deepcopy(data[0])
-        #print(current_set_of_features)
-
         for i in range(1, features_in_data):        # dont count first column
             current_set_of_features.append(i)
-        print(current_set_of_features)
-
-        #print(current_set_of_features)
 
         for i in range(1, features_in_data):           # dont count first column
             print("On level " + str(i) + " of the search tree")
@@ -91,17 +89,11 @@ def feature_search(selection):
             for j in range(1, features_in_data):
                 if j in current_set_of_features:
                     print("--Considering removing the " + str(j) + " feature")
-                    accuracy = leave_one_out_cross_validation(data, current_set_of_features, j)
+                    accuracy = leave_one_out_cross_validation(data, current_set_of_features, j, selection)
 
                     if accuracy > best_so_far_accuracy:
                         best_so_far_accuracy = accuracy
                         feature_to_remove_at_this_level = j
-                """print("--Considering removing the " + str(j) + " feature")
-                accuracy = leave_one_out_cross_validation(data, current_set_of_features, j)
-
-                if accuracy > best_so_far_accuracy:
-                    best_so_far_accuracy = accuracy
-                    feature_to_remove_at_this_level = j"""
         
             current_set_of_features.remove(feature_to_remove_at_this_level)
             features_removed.append(feature_to_remove_at_this_level)
@@ -113,10 +105,10 @@ def feature_search(selection):
                 best_subset = copy.deepcopy(current_set_of_features)
             else:
                 decreasing_accuracy_count += 1
-            # algorithm takes too long to run, so I made a greedy choice, 
-            # as the accuracy ends up always dropping off for every extra feature after 2-3 features
-            if decreasing_accuracy_count > 4:
-                break
+
+            print("The current set is: ")
+            print(current_set_of_features)
+            print("and has accuracy " + str(best_so_far_accuracy) + "\n")
 
 
     print("The best subset is: ")
@@ -167,12 +159,18 @@ def feature_search(selection):
     print(accuracy)
     return accuracy"""
 
-def leave_one_out_cross_validation(data, current_set, feature_to_remove):
+# leave one out cross validation function, as provided by professor
+def leave_one_out_cross_validation(data, current_set, feature_to_modify, selection):
 #def leave_one_out_cross_validation(current_set, feature_to_remove):
     #data = read_file()
 
     feature_list = copy.deepcopy(current_set)
-    feature_list.remove(feature_to_remove)
+
+    if selection == "1":
+        feature_list.append(feature_to_modify)
+
+    if selection == "2":
+        feature_list.remove(feature_to_modify)
 
     number_correctly_classfied = 0
 
@@ -204,7 +202,7 @@ def leave_one_out_cross_validation(data, current_set, feature_to_remove):
             number_correctly_classfied = number_correctly_classfied + 1
 
     accuracy = number_correctly_classfied / len(data)
-    print(accuracy)
+    print("Accuracy would be: " + str(accuracy))
     return accuracy
 
 
@@ -213,7 +211,6 @@ def main():
 
     selection = search_selection()
     feature_search(selection)
-    #leave_one_out_cross_validation([26, 27], 31)   # EA large
 
     end_time = time.time()
     print(f"It took {end_time-start_time:.2f} seconds to compute")
