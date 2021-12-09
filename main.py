@@ -74,7 +74,6 @@ def feature_search(selection):
                 if decreasing_accuracy_count > 4:
                     break
 
-    #elif selection == 2:    # backward elimination
     if selection == "2":
         for i in range(1, features_in_data):        # dont count first column
             current_set_of_features.append(i)
@@ -110,62 +109,16 @@ def feature_search(selection):
             print(current_set_of_features)
             print("and has accuracy " + str(best_so_far_accuracy) + "\n")
 
-
     print("The best subset is: ")
     print(best_subset)
     print("Which returns an accuracy of: " + str(top_accuracy))
-    #for k in range(len(best_subset)):
-    #    print(str(best_subset[k]))
-    #print("Which returns an accuracy of: " + top_accuracy)
-
-#leave one out cross validation function, as provided by professor
-"""def leave_one_out_cross_validation(data, current_set, feature_to_add):
-#def leave_one_out_cross_validation(current_set, feature_to_add):
-    #data = read_file()
-
-    feature_list = copy.deepcopy(current_set)
-    feature_list.append(feature_to_add)
-
-    number_correctly_classfied = 0
-
-    for i in range(len(data)):
-        object_to_classify = data[i]
-        label_object_to_classify = data[i][0]       # labels from first column
-
-        nearest_neighbor_distance = math.inf
-        nearest_neighbor_location = math.inf
-
-        for j in range(len(data)):
-            if j != i:
-                lp = copy.deepcopy(data[j])
-                this_distance = 0
-                for a in range(len(feature_list)):
-                    feats = feature_list[a]
-                    this_distance += math.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
-                    #this_distance += np.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
-
-                if this_distance < nearest_neighbor_distance:
-                    nearest_neighbor_distance = this_distance
-                    nearest_neighbor_location = j
-                    nearest_neighbor_label = data[nearest_neighbor_location][0]
-
-        #print("Object " + str(i) + " is class " + str(label_object_to_classify))
-        #print("Its nearest neighbor is " + str(nearest_neighbor_location) + " which is class " + str(nearest_neighbor_label))
-
-        if label_object_to_classify == nearest_neighbor_label:
-            number_correctly_classfied = number_correctly_classfied + 1
-
-    accuracy = number_correctly_classfied / len(data)
-    print(accuracy)
-    return accuracy"""
 
 # leave one out cross validation function, as provided by professor
 def leave_one_out_cross_validation(data, current_set, feature_to_modify, selection):
-#def leave_one_out_cross_validation(current_set, feature_to_remove):
-    #data = read_file()
 
     feature_list = copy.deepcopy(current_set)
 
+    selection = "1"
     if selection == "1":
         feature_list.append(feature_to_modify)
 
@@ -188,7 +141,6 @@ def leave_one_out_cross_validation(data, current_set, feature_to_modify, selecti
                 for a in range(len(feature_list)):
                     feats = feature_list[a]
                     this_distance += math.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
-                    #this_distance += np.sqrt((object_to_classify[feats] - lp[feats]) ** 2)
 
                 if this_distance < nearest_neighbor_distance:
                     nearest_neighbor_distance = this_distance
@@ -216,8 +168,3 @@ def main():
     print(f"It took {end_time-start_time:.2f} seconds to compute")
 
 main()
-
-#leave_one_out_cross_validation([7, 4], 9)  # AT small
-#leave_one_out_cross_validation([3, 2, 8], 8)   # EA small
-#leave_one_out_cross_validation([26, 27], 31)   EA large
-#leave_one_out_cross_validation([1, 4, 6], 6)   # EA small
